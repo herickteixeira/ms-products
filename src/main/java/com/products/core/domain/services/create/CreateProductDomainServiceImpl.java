@@ -4,9 +4,9 @@ import com.products.core.domain.aggregates.category.Category;
 import com.products.core.domain.aggregates.product.Product;
 import com.products.core.shared.validators.ObjectValidator;
 import com.products.infrastructure.persistence.repository.product.ProductRepository;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+@Component
 public class CreateProductDomainServiceImpl implements CreateProductDomainService {
 
     private final ProductRepository productRepository;

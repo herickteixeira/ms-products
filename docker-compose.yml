@@ -1,0 +1,150 @@
+version: "3.7"
+
+services:
+
+  products:
+    container_name: products-container
+    image: products
+    build:
+      context: .
+      dockerfile: .docker/Dockerfile
+    command: /wait-for-it.sh products-postgres:5432 -t 30 -- java $JVM_OPT -jar app.jar
+    depends_on:
+      - products-mongo
+      - products-postgres
+      - products-kafka
+    ports:
+      - "8080:8080"
+      - "5005:5005"
+    environment:
+      SERVER_PORT: 8080
+      LOG_LEVEL_APP: INFO
+      SPRING_DATA_MONGODB_USERNAME: products
+      SPRING_DATA_MONGODB_PASSWORD: FCh^u4z85oUo
+      SPRING_DATA_MONGODB_HOST: products-mongo
+      SPRING_DATA_MONGODB_PORT: 27017
+      SPRING_DATA_MONGODB_DATABASE: products
+      SPRING_DATA_MONGODB_COLLECTION: products
+      KAFKA_BOOTSTRAP_SERVERS: products-kafka:9092
+      KAFKA_TOPICS_EVENTS_PRODUCTS: products-event
+      KAFKA_TOPICS_DLT_PRODUCTS: products-dlt
+      SECURITY_API_KEY_ENABLED: "true"
+      SECURITY_API_KEY_VALUE: 51a20734-39de-4965-93f9-8e14c7d9e91a
+      JVM_OPT: -agentlib:jdwp=transport=dt_socket,address=*:5005,server=y,suspend=n
+      MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: "health,metrics,loggers,logfile"
+    networks:
+      - ecommerce-network
+
+  products-postgres:
+    image: postgres:14.2
+    container_name: products-postgres-container
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=postgres #superuser
+      - POSTGRES_PASSWORD=postgres #superuser pass
+    volumes:
+      - type: bind
+        source: ./.docker/docker-entrypoint-initdb.d/postgres/init-user-db.sh
+        target: /docker-entrypoint-initdb.d/init-user-db.sh
+    ports:
+      - "5432:5432"
+    networks:
+      - ecommerce-network
+
+  products-mongo:
+    container_name: products-mongo-container
+    image: mongo
+    environment:
+      - MONGO_INITDB_DATABASE=products
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=example
+    volumes:
+      - type: bind
+        source: ./.docker/docker-entrypoint-initdb.d/mongo/mongo-init.js
+        target: /docker-entrypoint-initdb.d/mongo-init.js
+    ports:
+      - "27017:27017"
+    restart: unless-stopped
+    networks:
+      - ecommerce-network
+
+  zookeeper:
+    container_name: zookeeper-container
+    image: confluentinc/cp-zookeeper:6.0.2
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+    networks:
+      - ecommerce-network
+
+  products-kafka:
+    container_name: products-kafka-container
+    image: confluentinc/cp-kafka:6.0.2
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+      - "19092:19092"
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://products-kafka:19092,EXTERNAL://products-kafka:9092
+      KAFKA_LISTENERS: INTERNAL://products:19092,EXTERNAL://products:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+    networks:
+      - ecommerce-network
+
+  products-kafka-init:
+    container_name: products-kafka-init-container
+    build:
+      context: .
+      dockerfile: .docker/kafka-init.Dockerfile
+    depends_on:
+      - products-kafka
+    networks:
+      - ecommerce-network
+
+  schema-registry:
+    container_name: schema-registry-container
+    image: confluentinc/cp-schema-registry:6.0.2
+    depends_on:
+      - products-kafka
+    environment:
+      SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: zookeeper:2181
+      SCHEMA_REGISTRY_HOST_NAME: schema-registry
+      SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
+    networks:
+      - ecommerce-network
+
+  control-center:
+    container_name: control-center-container
+    image: confluentinc/cp-enterprise-control-center:6.0.2
+    depends_on:
+      - products-kafka
+    ports:
+      - "9021:9021"
+    restart: unless-stopped
+    environment:
+      CONTROL_CENTER_ZOOKEEPER_CONNECT: zookeeper:2181
+      CONTROL_CENTER_BOOTSTRAP_SERVERS: 'products-kafka:19092'
+      CONTROL_CENTER_REPLICATION_FACTOR: 1
+      CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: 1
+      CONTROL_CENTER_INTERNAL_TOPICS_PARTITIONS: 1
+      CONTROL_CENTER_STREAMS_NUM_STREAM_THREADS: 2
+      PORT: 9021
+    networks:
+      - ecommerce-network
+
+  kowl:
+    container_name: kowl-container
+    image: rsmnarts/kowl:latest
+    ports:
+      - "8082:8080"
+    restart: unless-stopped
+    environment:
+      KAFKA_BROKERS: products-kafka:9092
+    networks:
+      - ecommerce-network
+
+networks:
+  ecommerce-network:

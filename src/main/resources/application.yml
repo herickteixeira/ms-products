@@ -1,1 +1,69 @@
 
+application:
+  title: '@project.name@'
+  description: '@project.description@'
+  version: '@project.version@'
+
+server:
+  port: ${SERVER_PORT:8080}
+
+logging:
+  level:
+    ROOT: ${LOG_LEVEL_APP:INFO}
+
+spring:
+  jpa:
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: none
+
+  datasource:
+    url: ${POSTGRES_DATABASE_URL:jdbc:postgresql://products-postgres:5432/products}
+    username: ${POSTGRES_DATABASE_USERNAME:app_user}
+    password: ${POSTGRES_DATABASE_PASSWORD:1234}
+
+  flyway:
+    enabled: true
+
+  data:
+    mongodb:
+      username: ${SPRING_DATA_MONGODB_USERNAME:products}
+      password: ${SPRING_DATA_MONGODB_PASSWORD:FCh^u4z85oUo}
+      host: ${SPRING_DATA_MONGODB_HOST:127.0.0.1}
+      port: ${SPRING_DATA_MONGODB_PORT:27017}
+      database: ${SPRING_DATA_MONGODB_DATABASE:products}
+      collection: ${SPRING_DATA_MONGODB_COLLECTION:products}
+
+
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:127.0.0.1:9092}
+    producer:
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      key-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      properties:
+        spring.deserializer.key.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
+        spring.deserializer.value.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
+        max.poll.interval.ms: 900000
+        max.poll.records: 10
+
+kafka:
+  topics:
+    commands:
+      vehicle-stakeholders: ${KAFKA_TOPICS_COMMANDS_PRODUCTS:products-command}
+    events:
+      vehicle-stakeholders: ${KAFKA_TOPICS_EVENTS_PRODUCTS:products-event}
+      stakeholders: ${KAFKA_TOPICS_EVENTS_PRODUCTS:products-event}
+    dlt:
+      vehicle-stakeholders: ${KAFKA_TOPICS_DLT_VEHICLE_PRODUCTS:products-dlt}
+
+security:
+  api-key:
+    enabled: ${SECURITY_API_KEY_ENABLED:true}
+    value: ${SECURITY_API_KEY_VALUE:51a20734-39de-4965-93f9-8e14c7d9e91a}
