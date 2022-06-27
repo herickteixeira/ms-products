@@ -22,9 +22,9 @@ public class SaveProductCommandHandler implements Command.Handler<SaveProductCom
     @Autowired
     public SaveProductCommandHandler(
             CreateProductDomainService createProductDomainService,
-            ProductRepository productRepository1, Pipeline pipeline) {
+            ProductRepository productRepository, Pipeline pipeline) {
         this.createProductDomainService = createProductDomainService;
-        this.productRepository = productRepository1;
+        this.productRepository = productRepository;
         this.pipeline = pipeline;
     }
 

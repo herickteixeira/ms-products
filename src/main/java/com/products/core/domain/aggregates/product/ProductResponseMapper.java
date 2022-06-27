@@ -1,5 +1,7 @@
 package com.products.core.domain.aggregates.product;
 
+import com.products.core.domain.aggregates.category.CategoryResponse;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,8 +20,19 @@ public class ProductResponseMapper {
         response.setName(product.getName());
         response.setDescription(product.getDescription());
         response.setPrice(product.getPrice());
-        response.setCategories(product.getCategories());
+        response.setCategories(categoryMap(product));
 
         return response;
+    }
+
+    private static List<CategoryResponse> categoryMap(Product product) {
+        var responses = new ArrayList<CategoryResponse>();
+        for (var category : product.getCategories()) {
+            var categoryResponse = new CategoryResponse();
+            categoryResponse.setId(category.getId());
+            categoryResponse.setName(category.getName());
+            responses.add(categoryResponse);
+        }
+        return responses;
     }
 }

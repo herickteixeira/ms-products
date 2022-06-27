@@ -1,7 +1,6 @@
 package com.products.core.domain.aggregates.product;
 
 import com.products.core.domain.aggregates.category.Category;
-import com.products.core.shared.validators.CustomValidator;
 
 import java.util.List;
 

@@ -3,7 +3,7 @@ package com.products.core.shared.exceptions;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DomainException extends  RuntimeException{
+public class DomainException extends RuntimeException {
     private final List<String> errorMessages;
 
     public DomainException(List<String> errorMessages) {

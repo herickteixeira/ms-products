@@ -22,8 +22,8 @@ services:
       POSTGRES_PORT: 5432
       POSTGRES_URL: jdbc:postgresql://postgres-db:5432/products
       KAFKA_BOOTSTRAP_SERVERS: products-kafka:9092
-      KAFKA_TOPICS_COMMANDS_PRODUCTS: vehicle-stakeholders-command
-      KAFKA_TOPICS_EVENTS_PRODUCTS: vehicle-stakeholders-event
+      KAFKA_TOPICS_COMMANDS_PRODUCTS: products-command
+      KAFKA_TOPICS_EVENTS_PRODUCTS: products-event
       SECURITY_API_KEY_ENABLED: "true"
       SECURITY_API_KEY_VALUE: 51a20734-39de-4965-93f9-8e14c7d9e91a
       JVM_OPT: -agentlib:jdwp=transport=dt_socket,address=*:5005,server=y,suspend=n
