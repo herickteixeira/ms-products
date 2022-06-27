@@ -1,5 +1,6 @@
 package com.products.core.domain.aggregates.category;
 
+
 public class Category {
 
     private String id;

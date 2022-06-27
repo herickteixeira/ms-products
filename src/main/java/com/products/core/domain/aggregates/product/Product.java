@@ -3,32 +3,33 @@ package com.products.core.domain.aggregates.product;
 import com.products.core.domain.aggregates.category.Category;
 import com.products.core.shared.validators.CustomValidator;
 
+import java.util.List;
+
 public class Product {
     private String id;
     private String name;
     private String description;
     private Double price;
-    private Category category;
+    private List<Category> categories;
 
-    public Product(String id, String name, String description, Double price, Category category) {
+    public Product(String id, String name, String description, Double price, List<Category> categories) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
-        this.category = category;
+        this.categories = categories;
     }
 
-    public static Product create(String id, String name, String description, Double price, Category category) {
-        var product = new Product(id, name, description, price, category);
-        CustomValidator.validateAndThrow(product);
+    public static Product create(String id, String name, String description, Double price, List<Category> categories) {
+        var product = new Product(id, name, description, price, categories);
         return product;
     }
 
-    public void update(String name, String description, Double price, Category category) {
+    public void update(String name, String description, Double price, List<Category> categories) {
         this.name = name;
         this.description = description;
         this.price = price;
-        this.category = category;
+        this.categories = categories;
     }
 
     public String getId() {
@@ -63,11 +64,11 @@ public class Product {
         this.price = price;
     }
 
-    public Category getCategory() {
-        return category;
+    public List<Category> getCategories() {
+        return categories;
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
+    public void setCategories(List<Category> categories) {
+        this.categories = categories;
     }
 }

@@ -3,8 +3,10 @@ package com.products.infrastructure.persistence.repository.category;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "category")
 public class CategoryEntity {
 
     @Id
@@ -12,6 +14,9 @@ public class CategoryEntity {
     private String id;
     @Column(name = "name", nullable = false)
     private String name;
+
+    public CategoryEntity() {
+    }
 
     public String getId() {
         return id;
@@ -28,4 +33,5 @@ public class CategoryEntity {
     public void setName(String name) {
         this.name = name;
     }
+
 }

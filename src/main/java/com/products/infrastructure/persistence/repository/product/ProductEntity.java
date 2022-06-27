@@ -1,9 +1,13 @@
 package com.products.infrastructure.persistence.repository.product;
 
-import com.products.core.domain.aggregates.category.Category;
 import com.products.infrastructure.persistence.repository.category.CategoryEntity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import static javax.persistence.FetchType.EAGER;
 
 @Entity
 @Table(name = "products")
@@ -18,8 +22,8 @@ public class ProductEntity {
     private String description;
     @Column(name = "price", nullable = false)
     private Double price;
-    @Transient
-    private CategoryEntity category;
+    @ManyToMany(fetch = EAGER)
+    private Collection<CategoryEntity> categories = new ArrayList<>();
 
     public String getId() {
         return id;
@@ -53,11 +57,11 @@ public class ProductEntity {
         this.price = price;
     }
 
-    public CategoryEntity getCategory() {
-        return category;
+    public java.util.Collection<CategoryEntity> getCategories() {
+        return categories;
     }
 
-    public void setCategory(CategoryEntity category) {
-        this.category = category;
+    public void setCategories(List<CategoryEntity> categories) {
+        this.categories = categories;
     }
 }

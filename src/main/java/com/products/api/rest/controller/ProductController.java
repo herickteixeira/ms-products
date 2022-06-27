@@ -1,6 +1,6 @@
 package com.products.api.rest.controller;
 
-import com.products.application.commands.ProductRequest;
+import com.products.core.domain.aggregates.product.ProductRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

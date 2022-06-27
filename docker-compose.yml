@@ -3,15 +3,13 @@ version: "3.7"
 services:
 
   products:
-    container_name: products-container
+    container_name: app-products
     image: products
     build:
       context: .
       dockerfile: .docker/Dockerfile
-    command: /wait-for-it.sh products-postgres:5432 -t 30 -- java $JVM_OPT -jar app.jar
     depends_on:
-      - products-mongo
-      - products-postgres
+      - postgres-db
       - products-kafka
     ports:
       - "8080:8080"
@@ -19,15 +17,13 @@ services:
     environment:
       SERVER_PORT: 8080
       LOG_LEVEL_APP: INFO
-      SPRING_DATA_MONGODB_USERNAME: products
-      SPRING_DATA_MONGODB_PASSWORD: FCh^u4z85oUo
-      SPRING_DATA_MONGODB_HOST: products-mongo
-      SPRING_DATA_MONGODB_PORT: 27017
-      SPRING_DATA_MONGODB_DATABASE: products
-      SPRING_DATA_MONGODB_COLLECTION: products
+      POSTGRES_USERNAME: root
+      POSTGRES_PASSWORD: example
+      POSTGRES_PORT: 5432
+      POSTGRES_URL: jdbc:postgresql://postgres-db:5432/products
       KAFKA_BOOTSTRAP_SERVERS: products-kafka:9092
-      KAFKA_TOPICS_EVENTS_PRODUCTS: products-event
-      KAFKA_TOPICS_DLT_PRODUCTS: products-dlt
+      KAFKA_TOPICS_COMMANDS_PRODUCTS: vehicle-stakeholders-command
+      KAFKA_TOPICS_EVENTS_PRODUCTS: vehicle-stakeholders-event
       SECURITY_API_KEY_ENABLED: "true"
       SECURITY_API_KEY_VALUE: 51a20734-39de-4965-93f9-8e14c7d9e91a
       JVM_OPT: -agentlib:jdwp=transport=dt_socket,address=*:5005,server=y,suspend=n
@@ -35,41 +31,21 @@ services:
     networks:
       - ecommerce-network
 
-  products-postgres:
-    image: postgres:14.2
-    container_name: products-postgres-container
+  postgres-db:
+    image: postgres
+    container_name: postgres
     restart: unless-stopped
     environment:
-      - POSTGRES_USER=postgres #superuser
-      - POSTGRES_PASSWORD=postgres #superuser pass
-    volumes:
-      - type: bind
-        source: ./.docker/docker-entrypoint-initdb.d/postgres/init-user-db.sh
-        target: /docker-entrypoint-initdb.d/init-user-db.sh
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=example
+      - POSTGRES_DB=products
     ports:
       - "5432:5432"
     networks:
       - ecommerce-network
 
-  products-mongo:
-    container_name: products-mongo-container
-    image: mongo
-    environment:
-      - MONGO_INITDB_DATABASE=products
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=example
-    volumes:
-      - type: bind
-        source: ./.docker/docker-entrypoint-initdb.d/mongo/mongo-init.js
-        target: /docker-entrypoint-initdb.d/mongo-init.js
-    ports:
-      - "27017:27017"
-    restart: unless-stopped
-    networks:
-      - ecommerce-network
-
   zookeeper:
-    container_name: zookeeper-container
+    container_name: zookeeper
     image: confluentinc/cp-zookeeper:6.0.2
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
@@ -77,7 +53,7 @@ services:
       - ecommerce-network
 
   products-kafka:
-    container_name: products-kafka-container
+    container_name: products-kafka
     image: confluentinc/cp-kafka:6.0.2
     depends_on:
       - zookeeper
@@ -87,7 +63,7 @@ services:
     environment:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_ADVERTISED_LISTENERS: INTERNAL://products-kafka:19092,EXTERNAL://products-kafka:9092
-      KAFKA_LISTENERS: INTERNAL://products:19092,EXTERNAL://products:9092
+      KAFKA_LISTENERS: INTERNAL://products-kafka:19092,EXTERNAL://products-kafka:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
@@ -95,7 +71,7 @@ services:
       - ecommerce-network
 
   products-kafka-init:
-    container_name: products-kafka-init-container
+    container_name: products-kafka-init
     build:
       context: .
       dockerfile: .docker/kafka-init.Dockerfile
@@ -105,7 +81,7 @@ services:
       - ecommerce-network
 
   schema-registry:
-    container_name: schema-registry-container
+    container_name: schema-registry
     image: confluentinc/cp-schema-registry:6.0.2
     depends_on:
       - products-kafka
@@ -117,7 +93,7 @@ services:
       - ecommerce-network
 
   control-center:
-    container_name: control-center-container
+    container_name: control-center
     image: confluentinc/cp-enterprise-control-center:6.0.2
     depends_on:
       - products-kafka
@@ -136,7 +112,7 @@ services:
       - ecommerce-network
 
   kowl:
-    container_name: kowl-container
+    container_name: kowl
     image: rsmnarts/kowl:latest
     ports:
       - "8082:8080"

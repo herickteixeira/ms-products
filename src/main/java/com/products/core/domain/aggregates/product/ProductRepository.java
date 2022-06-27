@@ -1,6 +1,4 @@
-package com.products.infrastructure.persistence.repository.product;
-
-import com.products.core.domain.aggregates.product.Product;
+package com.products.core.domain.aggregates.product;
 
 import java.util.List;
 

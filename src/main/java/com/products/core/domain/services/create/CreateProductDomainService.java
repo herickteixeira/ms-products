@@ -3,6 +3,8 @@ package com.products.core.domain.services.create;
 import com.products.core.domain.aggregates.category.Category;
 import com.products.core.domain.aggregates.product.Product;
 
+import java.util.List;
+
 public interface CreateProductDomainService {
 
     Product execute(
@@ -10,5 +12,5 @@ public interface CreateProductDomainService {
             String name,
             String description,
             Double price,
-            Category category);
+            List<Category> categories);
 }

@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 
 public class SavedProductEvent extends BaseDomainEvent implements Notification {
 
-    @NotNull(message = "The product is invalid")
+    @NotNull(message = "The product is null")
     private final Product product;
 
     public SavedProductEvent(Product product) {

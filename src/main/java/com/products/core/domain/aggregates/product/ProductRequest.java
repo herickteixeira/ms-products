@@ -1,6 +1,8 @@
-package com.products.application.commands;
+package com.products.core.domain.aggregates.product;
 
 import com.products.core.domain.aggregates.category.Category;
+
+import java.util.List;
 
 public class ProductRequest {
 
@@ -8,7 +10,7 @@ public class ProductRequest {
     private String name;
     private String description;
     private Double price;
-    private Category category;
+    private List<Category> categories;
 
     public String getId() {
         return id;
@@ -42,11 +44,11 @@ public class ProductRequest {
         this.price = price;
     }
 
-    public Category getCategory() {
-        return category;
+    public List<Category> getCategories() {
+        return categories;
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
+    public void setCategories(List<Category> categories) {
+        this.categories = categories;
     }
 }

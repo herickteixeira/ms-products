@@ -1,8 +1,8 @@
 package com.products.api.rest.controller;
 
 import an.awesome.pipelinr.Pipeline;
-import com.products.application.commands.ProductRequest;
 import com.products.application.commands.SaveProductCommand;
+import com.products.core.domain.aggregates.product.ProductRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -10,7 +10,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 
 @RestController
-public class ProductControllerImpl implements ProductController{
+public class ProductControllerImpl implements ProductController {
 
     private final Pipeline pipeline;
 

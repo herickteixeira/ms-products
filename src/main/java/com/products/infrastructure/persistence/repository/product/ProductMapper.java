@@ -1,6 +1,7 @@
 package com.products.infrastructure.persistence.repository.product;
 
 import com.products.core.domain.aggregates.product.Product;
+import com.products.infrastructure.persistence.repository.category.CategoryEntity;
 import com.products.infrastructure.persistence.repository.category.CategoryMapper;
 
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ public class ProductMapper {
                 entity.getName(),
                 entity.getDescription(),
                 entity.getPrice(),
-                CategoryMapper.map(entity.getCategory()));
+                CategoryMapper.map((List<CategoryEntity>) entity.getCategories()));
     }
 
     public static List<Product> map(List<ProductEntity> entities) {

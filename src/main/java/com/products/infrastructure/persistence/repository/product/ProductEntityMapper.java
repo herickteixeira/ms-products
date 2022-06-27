@@ -14,7 +14,7 @@ public class ProductEntityMapper {
         entity.setName(product.getName());
         entity.setDescription(product.getDescription());
         entity.setPrice(product.getPrice());
-        entity.setCategory(CategoryEntityMapper.map(product.getCategory()));
+        entity.setCategories(CategoryEntityMapper.map(product.getCategories()));
         return entity;
     }
 }

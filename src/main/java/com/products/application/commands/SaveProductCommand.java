@@ -1,6 +1,7 @@
 package com.products.application.commands;
 
 import an.awesome.pipelinr.Command;
+import com.products.core.domain.aggregates.product.ProductRequest;
 import com.products.core.shared.IdentifierResponse;
 
 import javax.validation.constraints.NotNull;

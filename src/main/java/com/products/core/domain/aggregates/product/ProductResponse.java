@@ -1,11 +1,19 @@
 package com.products.core.domain.aggregates.product;
 
+import com.products.core.domain.aggregates.category.Category;
+
+import java.util.List;
+
 public class ProductResponse {
 
     private String id;
     private String name;
     private String description;
     private Double price;
+    private List<Category> categories;
+
+    public ProductResponse() {
+    }
 
     public String getId() {
         return id;
@@ -37,5 +45,13 @@ public class ProductResponse {
 
     public void setPrice(Double price) {
         this.price = price;
+    }
+
+    public List<Category> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(List<Category> categories) {
+        this.categories = categories;
     }
 }
