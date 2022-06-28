@@ -11,6 +11,7 @@ public class CreateProductDomainServiceImpl implements CreateProductDomainServic
 
     @Override
     public Product execute(String id, String name, String description, Double price, List<Category> categories) {
+
         return Product.create(id, name, description, price, categories);
     }
 }

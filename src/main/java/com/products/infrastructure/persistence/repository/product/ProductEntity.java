@@ -4,10 +4,7 @@ import com.products.infrastructure.persistence.repository.category.CategoryEntit
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-
-import static javax.persistence.FetchType.EAGER;
 
 @Entity
 @Table(name = "products")
@@ -22,8 +19,11 @@ public class ProductEntity {
     private String description;
     @Column(name = "price", nullable = false)
     private Double price;
-    @ManyToMany(fetch = EAGER)
-    private Collection<CategoryEntity> categories = new ArrayList<>();
+    @ManyToMany
+    private List<CategoryEntity> categories = new ArrayList<>();
+
+    public ProductEntity() {
+    }
 
     public String getId() {
         return id;

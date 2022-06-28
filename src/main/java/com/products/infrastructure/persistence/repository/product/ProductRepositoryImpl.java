@@ -24,13 +24,7 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public Product findById(String id) {
-        var optionalProduct = jpaProductRepository.findById(id);
-
-        if (optionalProduct.isEmpty())
-            throw new RuntimeException(String.format("Product of id %s no found", id));
-
-        var product = optionalProduct.get();
-
+        var product = jpaProductRepository.findById(id).get();
         return ProductMapper.map(product);
     }
 

@@ -1,12 +1,12 @@
 package com.products.infrastructure.persistence.repository.category;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import com.products.infrastructure.persistence.repository.product.ProductEntity;
+
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
-@Table(name = "category")
+@Table(name = "categories")
 public class CategoryEntity {
 
     @Id
@@ -15,7 +15,14 @@ public class CategoryEntity {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @ManyToMany
+    private List<ProductEntity> products;
     public CategoryEntity() {
+    }
+
+    public CategoryEntity(String id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
     public String getId() {
@@ -34,4 +41,11 @@ public class CategoryEntity {
         this.name = name;
     }
 
+    public List<ProductEntity> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<ProductEntity> products) {
+        this.products = products;
+    }
 }

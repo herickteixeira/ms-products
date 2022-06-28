@@ -3,11 +3,13 @@ package com.products.api.rest.controller;
 import an.awesome.pipelinr.Pipeline;
 import com.products.application.commands.SaveProductCommand;
 import com.products.core.domain.aggregates.product.ProductRequest;
+import com.products.core.domain.aggregates.product.ProductResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 public class ProductControllerImpl implements ProductController {
@@ -24,5 +26,10 @@ public class ProductControllerImpl implements ProductController {
         URI uri = uriComponentsBuilder.path("/products/{id}").buildAndExpand(response.getId().toString()).toUri();
 
         return ResponseEntity.created(uri).build();
+    }
+
+    @Override
+    public ResponseEntity<List<ProductResponse>> getAll() {
+        return null;
     }
 }
