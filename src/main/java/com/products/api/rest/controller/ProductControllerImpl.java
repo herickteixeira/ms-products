@@ -2,6 +2,8 @@ package com.products.api.rest.controller;
 
 import an.awesome.pipelinr.Pipeline;
 import com.products.application.commands.SaveProductCommand;
+import com.products.application.queries.GetProductsQuery;
+import com.products.application.shared.PaginationRequest;
 import com.products.core.domain.aggregates.product.ProductRequest;
 import com.products.core.domain.aggregates.product.ProductResponse;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +31,11 @@ public class ProductControllerImpl implements ProductController {
     }
 
     @Override
-    public ResponseEntity<List<ProductResponse>> getAll() {
-        return null;
+    public ResponseEntity<List<ProductResponse>> getProducts(String offset, String limit) {
+        var pagination = new PaginationRequest(offset, limit);
+        var response = pipeline.send(new GetProductsQuery(pagination));
+
+
+        return ResponseEntity.ok().body(response.getElements());
     }
 }

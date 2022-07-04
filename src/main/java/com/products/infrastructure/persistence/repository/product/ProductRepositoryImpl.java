@@ -1,11 +1,11 @@
 package com.products.infrastructure.persistence.repository.product;
 
+import com.products.application.shared.Page;
+import com.products.application.shared.Pagination;
 import com.products.core.domain.aggregates.product.Product;
 import com.products.core.domain.aggregates.product.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 @Repository
 public class ProductRepositoryImpl implements ProductRepository {
@@ -29,10 +29,10 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public List<Product> findAll() {
-        var products = jpaProductRepository.findAll();
+    public Page<Product> findAll(Pagination pagination) {
+        var products = jpaProductRepository.findProductsFetchCategories();
 
-        return ProductMapper.map(products);
+        return new Page<>(pagination.getOffset(), pagination.getLimit(), ProductMapper.map(products));
     }
 
     @Override

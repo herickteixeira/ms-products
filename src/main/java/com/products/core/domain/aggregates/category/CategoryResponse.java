@@ -5,6 +5,9 @@ public class CategoryResponse {
     private String id;
     private String name;
 
+    public CategoryResponse() {
+    }
+
     public String getId() {
         return id;
     }

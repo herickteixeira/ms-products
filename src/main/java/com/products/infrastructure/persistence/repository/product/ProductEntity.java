@@ -6,6 +6,8 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.persistence.CascadeType.*;
+
 @Entity
 @Table(name = "products")
 public class ProductEntity {
@@ -19,7 +21,7 @@ public class ProductEntity {
     private String description;
     @Column(name = "price", nullable = false)
     private Double price;
-    @ManyToMany
+    @ManyToMany(cascade = {PERSIST, MERGE, REFRESH})
     private List<CategoryEntity> categories = new ArrayList<>();
 
     public ProductEntity() {

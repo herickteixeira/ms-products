@@ -8,7 +8,7 @@ public class PaginationResponse<T> implements Serializable {
 
     private final Long offset;
     private final Integer limit;
-    private final Long total;
+    private Long total;
     private final int acceptRange;
     private final transient List<T> elements;
 
@@ -16,6 +16,13 @@ public class PaginationResponse<T> implements Serializable {
         this.offset = offset;
         this.limit = limit;
         this.total = total;
+        this.elements = elements == null ? new ArrayList<>() : elements;
+        this.acceptRange = Pagination.ACCEPT_RANGE;
+    }
+
+    public PaginationResponse(Long offset, Integer limit, List<T> elements) {
+        this.offset = offset;
+        this.limit = limit;
         this.elements = elements == null ? new ArrayList<>() : elements;
         this.acceptRange = Pagination.ACCEPT_RANGE;
     }

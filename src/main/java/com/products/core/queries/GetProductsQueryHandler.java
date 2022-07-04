@@ -25,11 +25,9 @@ public class GetProductsQueryHandler implements Command.Handler<GetProductsQuery
         var page = productRepository.findAll(Pagination.create(query.getPagination().getOffset(),
                 query.getPagination().getLimit()));
 
-        if (page.isEmpty()) throw new NotFoundException("stakeholders.not.empty");
+        if (page.isEmpty()) throw new NotFoundException("Products is null");
 
-        return new PaginationResponse<>(page.getOffset(),
-                page.getLimit(),
-                page.getTotal(),
+        return new PaginationResponse<>(page.getOffset(), page.getLimit(),
                 ProductResponseMapper.map(page.getElements()));
     }
 }

@@ -6,13 +6,19 @@ import java.util.List;
 public class Page<T> {
     private final Long offset;
     private final Integer limit;
-    private final Long total;
+    private Long total;
     private final List<T> elements;
 
     public Page(Long offset, Integer limit, Long total, List<T> elements) {
         this.offset = offset;
         this.limit = limit;
         this.total = total;
+        this.elements = (List)(elements == null ? new ArrayList() : elements);
+    }
+
+    public Page(Long offset, Integer limit, List<T> elements) {
+        this.offset = offset;
+        this.limit = limit;
         this.elements = (List)(elements == null ? new ArrayList() : elements);
     }
 
